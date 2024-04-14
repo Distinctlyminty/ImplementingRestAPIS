@@ -1,6 +1,5 @@
 const dbClient = require("../dbClient");
-const Course = require("../models/courseSchema"); 
-
+const Course = require("../models/courseSchema");
 
 const titles = [
   "Introduction to Software Engineering",
@@ -18,11 +17,6 @@ const descriptions = [
 ];
 
 const durations = [30, 60, 90];
-const urls = [
-  "api.globomantics.com",
-  "api.globomantics.com",
-  "api.globomantics.com",
-];
 
 function getRandomElement(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -32,7 +26,7 @@ async function generateTestData() {
   await dbClient.connect();
   await Course.deleteMany();
 
-  for (let i = 0; i < 10; i++) { 
+  for (let i = 0; i < 5; i++) {
     const courseData = {
       title: getRandomElement(titles),
       description: getRandomElement(descriptions),
@@ -43,12 +37,7 @@ async function generateTestData() {
     // Create the course in the database
     const course = new Course(courseData);
     await course.save();
-
-    // Update the course with the streamingURL
-    course.streamingURL = `http://localhost:3000/api/course/${course._id}`;
-    await course.save();
   }
   await dbClient.disconnect();
-
 }
 module.exports = generateTestData;

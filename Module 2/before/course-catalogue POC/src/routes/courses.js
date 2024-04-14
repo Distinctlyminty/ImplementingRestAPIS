@@ -8,6 +8,28 @@ const dbClient = require("../dbClient");
 // Import the course model
 const CourseModel = require("../models/courseSchema");
 
+// Custom error handler middleware
+function errorHandler(err, req, res, next) {
+  console.error(err.message);
+
+  if (err.name === "ValidationError") {
+    return res.status(400).json({ error: err.message });
+  }
+
+  if (err.name === "CastError" && err.kind === "ObjectId") {
+    return res.status(404).json({ error: "Invalid ID" });
+  }
+
+  if (err.code && err.code == 11000) {
+    return res.status(409).json({ error: "Duplicate key error" });
+  }
+
+  res.status(500).json({ error: "Internal Server Error" });
+}
+
+// Use the error handler middleware
+router.use(errorHandler);
+
 // POST: Create a new course
 
 /**
@@ -39,7 +61,7 @@ router.post("/course", async (req, res) => {
     course = await course.save();
     res.send(course);
   } catch (error) {
-    res.status(400).send(error.message);
+    next(error);
   } finally {
     await dbClient.disconnect();
   }
@@ -73,7 +95,7 @@ router.get("/course", async (req, res) => {
       res.send(courses);
     }
   } catch (err) {
-    res.status(500).send(err);
+    next(error);
   } finally {
     await dbClient.disconnect();
   }
@@ -86,7 +108,7 @@ router.get("/course", async (req, res) => {
  *   get:
  *     summary: Retrieve a specific course by id
  *     tags: [Course]
-  *     parameters:
+ *     parameters:
  *       - in: path
  *         name: id
  *         required: true
@@ -110,7 +132,7 @@ router.get("/course/:id", async (req, res) => {
     if (!course) return res.status(404).send("Course not found.");
     res.send(course);
   } catch (err) {
-    res.status(500).send(err);
+    next(error);
   } finally {
     await dbClient.disconnect();
   }
@@ -124,7 +146,7 @@ router.get("/course/:id", async (req, res) => {
  *   put:
  *     summary: Update a specific course by id
  *     tags: [Course]
-  *     parameters:
+ *     parameters:
  *       - in: path
  *         name: id
  *         required: true
@@ -151,14 +173,14 @@ router.put("/course/:id", async (req, res) => {
   try {
     await dbClient.connect();
     const course = await CourseModel.findByIdAndUpdate(
-      { id: req.params.id },
+      req.params.id,
       req.body,
       { new: true }
     );
     if (!course) return res.status(404).send("Course not found.");
     res.send(course);
   } catch (err) {
-    res.status(500).send(err);
+    next(error);
   } finally {
     await dbClient.disconnect();
   }
@@ -192,13 +214,11 @@ router.put("/course/:id", async (req, res) => {
 router.delete("/course/:id", async (req, res) => {
   try {
     await dbClient.connect();
-    const course = await CourseModel.findByIdAndDelete({
-      id: req.params.id,
-    });
+    const course = await CourseModel.findByIdAndDelete(req.params.id);
     if (!course) return res.status(404).send("Course not found.");
     res.send(course);
   } catch (err) {
-    res.status(500).send(err);
+    next(error);
   } finally {
     await dbClient.disconnect();
   }

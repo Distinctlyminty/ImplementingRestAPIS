@@ -10,8 +10,8 @@ require("./swagger")(app);
 
 // add the test data
 generateTestData()
-  .then(() => console.log('Seed function executed successfully'))
-  .catch(err => console.error('Error executing seed function', err));
+  .then(() => console.log("Seed function executed successfully"))
+  .catch((err) => console.error("Error executing seed function", err));
 
 // Import and use the router
 const coursesRouter = require("./routes/courses");

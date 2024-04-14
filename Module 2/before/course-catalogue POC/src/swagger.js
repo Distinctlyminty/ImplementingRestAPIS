@@ -17,7 +17,7 @@ const options = {
       {
         url: "https://course-service.azurewebsites.net/api",
         description: "Production server",
-      }
+      },
     ],
   },
   apis: ["./models/courseSchema.js", "./routes/courses.js"],

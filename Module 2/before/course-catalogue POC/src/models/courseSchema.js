@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
 
 /**
  * @swagger
@@ -21,7 +22,7 @@ const mongoose = require("mongoose");
  *           description: The duration of the course in minutes
  *         streamingURL:
  *           type: string
- *           description: The URL for the streaming link of the course
+ *           description: The URL for the streaming link of the course (virtual property)
  *       example:
  *         title: "Introduction to Computer Science"
  *         description: "An introduction to the fundamental concepts of computer science"
@@ -29,12 +30,21 @@ const mongoose = require("mongoose");
  *         duration: 120
  *         streamingURL: "http://example.com/stream"
  */
-const courseSchema = new mongoose.Schema({
-  title: String,
-  description: String,
-  instructor: String,
-  duration: Number, // duration in minutes
-  streamingURL: String, // url for the streaming link
+const courseSchema = new mongoose.Schema(
+  {
+    title: String,
+    description: String,
+    instructor: String,
+    duration: Number, // duration in minutes
+  },
+  {
+    toJSON: { virtuals: true }, // include virtuals when document is converted to JSON
+    toObject: { virtuals: true }, // include virtuals when document is converted to an Object
+  }
+);
+
+courseSchema.virtual("streamingURL").get(function () {
+  return process.env.SERVER_URL + `/api/course/${this._id}`;
 });
 
 module.exports = mongoose.model("courseModel", courseSchema);
