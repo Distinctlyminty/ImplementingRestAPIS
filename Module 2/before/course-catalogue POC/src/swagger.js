@@ -11,11 +11,11 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:3000",
+        url: "http://localhost:3000/api",
         description: "Local server",
       },
       {
-        url: "https://course-service.azurewebsites.net",
+        url: "https://course-service.azurewebsites.net/api",
         description: "Production server",
       }
     ],

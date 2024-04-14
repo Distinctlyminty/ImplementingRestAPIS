@@ -14,7 +14,7 @@ RUN npm ci
 EXPOSE 3000
 
 # Define environment variable
-#ENV NODE_ENV=production
+ENV NODE_ENV=production
 
 # Run index.js when the container launches
 CMD [ "node", "app.js" ]

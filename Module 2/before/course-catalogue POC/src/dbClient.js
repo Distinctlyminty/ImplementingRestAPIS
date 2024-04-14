@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
+require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` });
 
-const uri = 'mongodb://mongo:27017/courseDB';
+const uri = process.env.DB_ConnetionString;
 const options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,

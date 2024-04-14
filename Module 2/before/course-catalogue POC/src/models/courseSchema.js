@@ -6,12 +6,7 @@ const mongoose = require("mongoose");
  *   schemas:
  *     Course:
  *       type: object
- *       required:
- *         - courseId
  *       properties:
- *         courseId:
- *           type: string
- *           description: The unique identifier for the course
  *         title:
  *           type: string
  *           description: The title of the course
@@ -28,7 +23,6 @@ const mongoose = require("mongoose");
  *           type: string
  *           description: The URL for the streaming link of the course
  *       example:
- *         courseId: "CS101"
  *         title: "Introduction to Computer Science"
  *         description: "An introduction to the fundamental concepts of computer science"
  *         instructor: "John Doe"
@@ -36,17 +30,11 @@ const mongoose = require("mongoose");
  *         streamingURL: "http://example.com/stream"
  */
 const courseSchema = new mongoose.Schema({
-    courseId: {
-        type: String,
-        required: true,
-        unique: true,
-      },
-      title: String,
-      description: String,
-      instructor: String,
-      duration: Number, // duration in minutes
-      streamingURL: String, // url for the streaming link
-  });
-  
-  module.exports = mongoose.model("courseModel", courseSchema);
-  
+  title: String,
+  description: String,
+  instructor: String,
+  duration: Number, // duration in minutes
+  streamingURL: String, // url for the streaming link
+});
+
+module.exports = mongoose.model("courseModel", courseSchema);

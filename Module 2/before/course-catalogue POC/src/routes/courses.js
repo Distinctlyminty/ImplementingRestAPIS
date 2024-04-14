@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
+const dbClient = require("../dbClient");
 
 // Import the course model
 const CourseModel = require("../models/courseSchema");
@@ -11,10 +12,10 @@ const CourseModel = require("../models/courseSchema");
 
 /**
  * @swagger
- * /courses:
+ * /course:
  *   post:
  *     summary: Create a new course
- *     tags: [Courses]
+ *     tags: [Course]
  *     requestBody:
  *       required: true
  *       content:
@@ -31,13 +32,16 @@ const CourseModel = require("../models/courseSchema");
  *       400:
  *         description: There was a problem with the request
  */
-router.post("/", async (req, res) => {
+router.post("/course", async (req, res) => {
   try {
+    await dbClient.connect();
     let course = new CourseModel(req.body);
     course = await course.save();
     res.send(course);
   } catch (error) {
     res.status(400).send(error.message);
+  } finally {
+    await dbClient.disconnect();
   }
 });
 
@@ -45,10 +49,10 @@ router.post("/", async (req, res) => {
 
 /**
  * @swagger
- * /courses:
+ * /course:
  *   get:
  *     summary: Retrieve a list of courses
- *     tags: [Courses]
+ *     tags: [Course]
  *     responses:
  *       200:
  *         description: A list of courses.
@@ -59,25 +63,36 @@ router.post("/", async (req, res) => {
  *               items:
  *                 $ref: '#/components/schemas/Course'
  */
-router.get("/", async (req, res) => {
-  const courses = await CourseModel.find();
-  res.send(courses);
+router.get("/course", async (req, res) => {
+  try {
+    await dbClient.connect();
+    const courses = await CourseModel.find();
+    if (!courses) {
+      res.status(404).send("No courses found");
+    } else {
+      res.send(courses);
+    }
+  } catch (err) {
+    res.status(500).send(err);
+  } finally {
+    await dbClient.disconnect();
+  }
 });
 
-// GET: Fetch a single course by courseId
+// GET: Fetch a single course by id
 /**
  * @swagger
- * /courses/{courseId}:
+ * /course/{id}:
  *   get:
- *     summary: Retrieve a specific course by courseId
- *     tags: [Courses]
- *     parameters:
+ *     summary: Retrieve a specific course by id
+ *     tags: [Course]
+  *     parameters:
  *       - in: path
- *         name: courseId
+ *         name: id
  *         required: true
+ *         description: ID of the vehicle to retrieve.
  *         schema:
  *           type: string
- *         description: The course ID
  *     responses:
  *       200:
  *         description: A specific course.
@@ -88,27 +103,34 @@ router.get("/", async (req, res) => {
  *       404:
  *         description: Course not found
  */
-router.get("/:courseId", async (req, res) => {
-  const course = await CourseModel.findOne({ courseId: req.params.courseId });
-  if (!course) return res.status(404).send("Course not found.");
-  res.send(course);
+router.get("/course/:id", async (req, res) => {
+  try {
+    await dbClient.connect();
+    const course = await CourseModel.findById(req.params.id);
+    if (!course) return res.status(404).send("Course not found.");
+    res.send(course);
+  } catch (err) {
+    res.status(500).send(err);
+  } finally {
+    await dbClient.disconnect();
+  }
 });
 
 // PUT: Update an existing course
 
 /**
  * @swagger
- * /courses/{courseId}:
+ * /course/{id}:
  *   put:
- *     summary: Update a specific course by courseId
- *     tags: [Courses]
- *     parameters:
+ *     summary: Update a specific course by id
+ *     tags: [Course]
+  *     parameters:
  *       - in: path
- *         name: courseId
+ *         name: id
  *         required: true
+ *         description: ID of the vehicle to update.
  *         schema:
  *           type: string
- *         description: The course ID
  *     requestBody:
  *       required: true
  *       content:
@@ -125,31 +147,38 @@ router.get("/:courseId", async (req, res) => {
  *       404:
  *         description: Course not found
  */
-router.put("/:courseId", async (req, res) => {
-  const course = await CourseModel.findOneAndUpdate(
-    { courseId: req.params.courseId },
-    req.body,
-    { new: true }
-  );
-  if (!course) return res.status(404).send("Course not found.");
-  res.send(course);
+router.put("/course/:id", async (req, res) => {
+  try {
+    await dbClient.connect();
+    const course = await CourseModel.findByIdAndUpdate(
+      { id: req.params.id },
+      req.body,
+      { new: true }
+    );
+    if (!course) return res.status(404).send("Course not found.");
+    res.send(course);
+  } catch (err) {
+    res.status(500).send(err);
+  } finally {
+    await dbClient.disconnect();
+  }
 });
 
 // DELETE: Delete a course
 
 /**
  * @swagger
- * /courses/{courseId}:
+ * /course/{id}:
  *   delete:
- *     summary: Delete a specific course by courseId
- *     tags: [Courses]
+ *     summary: Delete a specific course by id
+ *     tags: [Course]
  *     parameters:
  *       - in: path
- *         name: courseId
+ *         name: id
  *         required: true
+ *         description: ID of the course to delete.
  *         schema:
  *           type: string
- *         description: The course ID
  *     responses:
  *       200:
  *         description: The course was successfully deleted
@@ -160,12 +189,19 @@ router.put("/:courseId", async (req, res) => {
  *       404:
  *         description: Course not found
  */
-router.delete("/:courseId", async (req, res) => {
-  const course = await CourseModel.findOneAndDelete({
-    courseId: req.params.courseId,
-  });
-  if (!course) return res.status(404).send("Course not found.");
-  res.send(course);
+router.delete("/course/:id", async (req, res) => {
+  try {
+    await dbClient.connect();
+    const course = await CourseModel.findByIdAndDelete({
+      id: req.params.id,
+    });
+    if (!course) return res.status(404).send("Course not found.");
+    res.send(course);
+  } catch (err) {
+    res.status(500).send(err);
+  } finally {
+    await dbClient.disconnect();
+  }
 });
 
 module.exports = router;
