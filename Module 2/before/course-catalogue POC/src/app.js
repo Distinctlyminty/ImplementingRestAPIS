@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
+
 const app = express();
+
 app.use(express.json());
 
 require('./swagger')(app);
@@ -15,4 +17,7 @@ const coursesRouter = require('./routes/courses');
 app.use('/api/courses', coursesRouter);
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Listening on port ${port}...`));
+app.listen(port, () => {
+  console.log(`Listening on port ${port}...`);
+});
+

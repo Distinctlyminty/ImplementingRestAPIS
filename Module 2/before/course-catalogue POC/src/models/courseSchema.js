@@ -48,5 +48,5 @@ const courseSchema = new mongoose.Schema({
       streamingURL: String, // url for the streaming link
   });
   
-  module.exports = mongoose.model("courseeModel", courseSchema);
+  module.exports = mongoose.model("courseModel", courseSchema);
   
