@@ -11,13 +11,22 @@ services:
       - mongo
     environment:
       - MONGO_URI=mongo
-
+      - RUN_TESTS=false
+  test:
+    build: 
+      context: .
+      dockerfile: Dockerfile.test
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URI=mongo
+      - RUN_TESTS=true
   mongo:
     image: mongo:latest
     ports:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
-
+  
 volumes:
   mongo-data:
