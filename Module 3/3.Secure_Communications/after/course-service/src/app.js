@@ -9,8 +9,6 @@ const https = require('https');
 const fs = require('fs');
 require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
 
-
-
 const generateTestData = require("./data/TestData");
 const app = express();
 app.use(express.json());
@@ -18,22 +16,13 @@ require("./swagger")(app);
 
 // Use helmet to set various HTTP headers for security
 app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      imgSrc: ["'self'", "data:"],
-      connectSrc: ["'self'"],
-      fontSrc: ["'self'"],
-      objectSrc: ["'none'"],
-      mediaSrc: ["'self'"],
-      frameSrc: ["'none'"],
-    },
-  },
-  dnsPrefetchControl: false,
-  frameguard: { action: 'deny' },
-  hidePoweredBy: { setTo: 'PHP 4.2.0' } // Security through obsucrity!
+  contentSecurityPolicy: false, // disable it if you don't serve any HTML
+  hidePoweredBy: true, // hide X-Powered-By header
+  hsts: true, // enforce HTTPS
+  ieNoOpen: true, // set X-Download-Options for IE8+
+  noSniff: true, // set X-Content-Type-Options to prevent MIME-sniffing
+  frameguard: { action: 'deny' }, // provide clickjacking protection
+  xssFilter: true, // enable XSS filter in most recent web browsers
 }));
 
 // Enable CORS

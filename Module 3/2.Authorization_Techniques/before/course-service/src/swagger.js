@@ -19,6 +19,16 @@ const options = {
         description: "Production server",
       },
     ],
+    components: {
+      securitySchemes: {
+        Bearer: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
+    security: [{ Bearer: [] }],
   },
   apis: ["./models/courseSchema.js", "./routes/courses.js"],
 };

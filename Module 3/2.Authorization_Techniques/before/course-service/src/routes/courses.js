@@ -30,7 +30,7 @@ function errorHandler(err, req, res, next) {
 // Use the error handler middleware
 router.use(errorHandler);
 
-// POST: Create a new course
+// POST: Create a new course - only admin users can access this endpoint
 
 /**
  * @swagger

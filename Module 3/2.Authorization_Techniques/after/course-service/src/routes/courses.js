@@ -19,7 +19,7 @@ function ensureRole(role) {
   }
 }
 
-// Resource based access control - Middleware that checks if the user has the specified permission
+// Attribute based access control - Middleware that checks if the user has the specified permission
 function ensurePermission(resource, action) {
   return function(req, res, next) {
     const hasPermission = req.user.permissions.some(
@@ -33,6 +33,7 @@ function ensurePermission(resource, action) {
     }
   }
 }
+
 
 // Custom error handler middleware
 function errorHandler(err, req, res, next) {
