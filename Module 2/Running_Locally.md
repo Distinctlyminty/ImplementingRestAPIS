@@ -1,4 +1,4 @@
-##Running the API using Docker.
+# Running the API using Docker.
 
 ### Prerequisites
 Before you begin, make sure you have the following installed:
