@@ -41,4 +41,5 @@ module.exports = (app) => {
     res.setHeader('Content-Type', 'application/json');
     res.send(specs);
   });
+
 };

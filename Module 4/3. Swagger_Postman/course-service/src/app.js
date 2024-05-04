@@ -12,13 +12,6 @@ require("./swagger")(app);
 // Define secret key
 const secretKey = process.env.SECRET_KEY || "someRandomSecretKey";
 
-// Passport JWT options
-// const options = {
-//   secretOrKey: secretKey,
-//   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-//   issuer: "https://token.globomantics.com/fe393fd2-baf4-4426-af97-2aa7578a31f2/",
-//   audience: "8d3370fd-59e6-47d0-8cc6-a04f95fe7908",
-// };
 
 // Passport Bearer Strategy
 passport.use(
@@ -38,5 +31,4 @@ app.use("/api", passport.authenticate("oauth-bearer", { session: false }));
 const coursesRouter = require("./routes/courses");
 app.use("/api", coursesRouter);
 app.use("/oauth2", require("./routes/oauth2"));
-
 module.exports = app;

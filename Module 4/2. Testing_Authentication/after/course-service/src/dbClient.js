@@ -13,7 +13,6 @@ const options = {
 async function connect() {
   try {
     await mongoose.connect(uri, options);
-    console.log("Connected to MongoDB");
   } catch (err) {
     console.error(err);
   }
@@ -22,7 +21,6 @@ async function connect() {
 async function disconnect() {
   try {
     await mongoose.disconnect();
-    console.log("Disconnected from MongoDB");
   } catch (err) {
     console.error(err);
   }

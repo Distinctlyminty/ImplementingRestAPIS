@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
-const dbClsient = require("../dbClient");
+const dbClient = require("../dbClient");
 
 // Import the course model
 const CourseModel = require("../models/courseSchema");
