@@ -16,7 +16,7 @@ jobs:
       - name: Create .env.production file
         run: |
           echo PORT=${{ secrets.PORT }} >> .env.production
-          echo DB_ConnetionString=${{ secrets.DB_CONNECTIONSTRING }} >> .env.production
+          echo DB_ConnectionString=${{ secrets.DB_CONNECTIONSTRING }} >> .env.production
           echo SERVER_URL=${{ secrets.SERVER_URL }} >> .env.production
           echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env.production
           echo GENERATE_TEST_DATA=${{ secrets.GENERATE_TEST_DATA }} >> .env.production

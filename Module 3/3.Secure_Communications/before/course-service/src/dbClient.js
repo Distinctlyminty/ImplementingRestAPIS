@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
 
-const uri = process.env.DB_ConnetionString;
+const uri = process.env.DB_ConnectionString;
 const options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
