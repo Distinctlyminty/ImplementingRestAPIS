@@ -11,6 +11,8 @@ services:
     environment:
       - MONGO_URI=mongo
       - RUN_TESTS=false
+    volumes:
+      - ./logs/:/app/logs/  
   test:
     build: 
       context: .

@@ -66,7 +66,7 @@ router.post("/course",ensureRole('admin'), ensurePermission('course', 'create'),
     course = await course.save();
     res.send(course);
   } catch (error) {
-    next(error);
+    return next(error);
   } finally {
     await dbClient.disconnect();
   }
@@ -100,7 +100,7 @@ router.get("/course", ensurePermission('course', 'read'), async (req, res) => {
       res.send(courses);
     }
   } catch (err) {
-    next(error);
+    return next(error);
   } finally {
     await dbClient.disconnect();
   }
@@ -137,7 +137,7 @@ router.get("/course/:id", ensurePermission('course', 'read'), async (req, res) =
     if (!course) return res.status(404).send("Course not found.");
     res.send(course);
   } catch (err) {
-    next(error);
+    return next(error);
   } finally {
     await dbClient.disconnect();
   }
@@ -185,7 +185,7 @@ router.put("/course/:id",ensurePermission('course', 'update'), async (req, res) 
     if (!course) return res.status(404).send("Course not found.");
     res.send(course);
   } catch (err) {
-    next(error);
+    return next(error);
   } finally {
     await dbClient.disconnect();
   }
@@ -223,7 +223,7 @@ router.delete("/course/:id",ensurePermission('course', 'delete'), async (req, re
     if (!course) return res.status(404).send("Course not found.");
     res.send(course);
   } catch (err) {
-    next(error);
+    return next(error);
   } finally {
     await dbClient.disconnect();
   }
