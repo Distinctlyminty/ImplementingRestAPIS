@@ -34,8 +34,6 @@ function ensurePermission(resource, action) {
   }
 }
 
-// Use the error handler middleware
-router.use(errorHandler);
 
 // POST: Create a new course - only admin users can access this endpoint
 
