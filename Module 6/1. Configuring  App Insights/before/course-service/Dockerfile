@@ -17,4 +17,4 @@ EXPOSE 3000
 ENV NODE_ENV=production
 
 # Run index.js when the container launches
-CMD [ "npm","run", "start:prod" ]
+CMD [ "npm","run", "start" ]
