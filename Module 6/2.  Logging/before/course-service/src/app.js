@@ -6,7 +6,6 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
 const appInsights = require('applicationinsights');
 
-console.log(process.env.APPLICATIONINSIGHTS_CONNECTION_STRING);
 appInsights.setup()
     .setAutoDependencyCorrelation(true)
     .setAutoCollectRequests(true)
@@ -25,7 +24,6 @@ require("./swagger")(app);
 
 // Define secret key
 const secretKey = process.env.SECRET_KEY || "someRandomSecretKey";
-
 
 // Passport Bearer Strategy
 passport.use(
@@ -60,6 +58,8 @@ app.use("/api", passport.authenticate("oauth-bearer", { session: false }));
 // Error handling middleware 
 app.use((err, req, res, next) => {
   appInsightsClient.trackException({ exception: err });
+  
+  console.log(err);
   
   if (err.name === "ValidationError") {
     return res.status(400).json({ error: err.message });
