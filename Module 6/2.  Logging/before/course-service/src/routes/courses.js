@@ -34,24 +34,7 @@ function ensurePermission(resource, action) {
   }
 }
 
-// Custom error handler middleware
-function errorHandler(err, req, res, next) {
-  console.error(err.message);
 
-  if (err.name === "ValidationError") {
-    return res.status(400).json({ error: err.message });
-  }
-
-  if (err.name === "CastError" && err.kind === "ObjectId") {
-    return res.status(404).json({ error: "Invalid ID" });
-  }
-
-  if (err.code && err.code == 11000) {
-    return res.status(409).json({ error: "Duplicate key error" });
-  }
-
-  res.status(500).json({ error: "Internal Server Error" });
-}
 
 // Use the error handler middleware
 router.use(errorHandler);
